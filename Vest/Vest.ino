@@ -41,9 +41,6 @@ void setup()
     while (true);
   }
 
-  // wait 10 seconds for connection:
-  delay(10000);
-
   // start the web server on port 80
   server.begin();
 
@@ -54,7 +51,8 @@ void loop()
 {
   // put your main code here, to run repeatedly:
   WiFiClient client = server.available();
-  if(client.connected())
+  Serial.println(client.status());
+  if(client)
   {
     Serial.println("Client Found");
   }
