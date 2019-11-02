@@ -69,7 +69,7 @@ void loop()
     }
   }
   // put your main code here, to run repeatedly:
-  WiFiClient client = server.available();
+//  WiFiClient client = server.available();
 //  Serial.println(client.status());
 //  if(client)
 //  {
@@ -79,7 +79,7 @@ void loop()
 //      server.print('v');
 //    }
 //  }
-  client.stop();
+//  client.stop();
   server.print('h');
   delay(20000);
 }
