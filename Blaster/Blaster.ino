@@ -6,7 +6,7 @@ char pw[] = "BlueTeam1";        // your network password
 int port = 80;
 
 int status = WL_IDLE_STATUS;
-char servername[]="google.com";  // remote server we will connect to
+//char servername[]="google.com";  // remote server we will connect to
 
 WiFiClient client;
 

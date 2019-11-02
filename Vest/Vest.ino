@@ -49,11 +49,27 @@ void setup()
 
 void loop()
 {
-  // put your main code here, to run repeatedly:
-  WiFiClient client = server.available();
-  Serial.println(client.status());
-  if(client)
+  if (status != WiFi.status()) 
   {
-    Serial.println("Client Found");
+    // it has changed update the variable
+    status = WiFi.status();
+
+    if (status == WL_AP_CONNECTED) 
+    {
+      // a device has connected to the AP
+      Serial.println("Device connected to AP");
+    } 
+    else 
+    {
+      // a device has disconnected from the AP, and we are back in listening mode
+      Serial.println("Device disconnected from AP");
+    }
   }
+//  // put your main code here, to run repeatedly:
+//  WiFiClient client = server.available();
+//  Serial.println(client.status());
+//  if(client)
+//  {
+//    Serial.println("Client Found");
+//  }
 }
