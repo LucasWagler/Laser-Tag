@@ -1,13 +1,35 @@
-#include <WiFi.h>
-#include <WiFiClient.h>
-#include <WiFiServer.h>
+#include <SPI.h>
+#include <WiFiNINA.h>
 
-void setup() {
-  // put your setup code here, to run once:
 
+char ssid[] = "Blue1";          //  your network SSID (name)
+char pw[] = "BlueTeam1";        // your network password
+
+int port = 80;
+
+int status = WL_IDLE_STATUS;
+char servername[]="google.com";  // remote server we will connect to
+
+WiFiClient client;
+
+void setup() 
+{
+  Serial.begin(9600);
+  delay(1000);
+  Serial.print("Attempting to connect to: ");
+  Serial.println(ssid);
+
+  status = WiFi.begin(ssid, pw);
+  while( status != WL_CONNECTED) 
+  {
+    Serial.println("Couldn't get a wifi connection");
+    delay(500);
+     status = WiFi.begin(ssid, pw);
+  }
+  Serial.println("Connected to wifi");
 }
 
-void loop() {
-  // put your main code here, to run repeatedly:
+void loop() 
+{
 
 }

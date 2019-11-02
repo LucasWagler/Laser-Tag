@@ -1,25 +1,60 @@
 #include <WiFiNINA.h>
 
-char ssid[] = "Blue2";
-char pw[] = "BlueTeam";
+char ssid[] = "Blue1";
+char pw[] = "BlueTeam1";
 
 IPAddress ip(192,168,1,1);
 WiFiServer server(80);
+int status = WL_IDLE_STATUS;
 
-void setup() {
-  // put your setup code here, to run once:
-  Serial.begin(115200);
-  WiFi.config(ip);
-  WiFi.beginAP(ssid, pw);
+void printWiFiStatus()
+{
+  // print the SSID of the network you're attached to:
+  Serial.print("SSID: ");
+  Serial.println(WiFi.SSID());
 
-  server.begin();
-  Serial.println("IP Address: " + WiFi.localIP());
+  // print your WiFi shield's IP address:
+  IPAddress ip = WiFi.localIP();
+  Serial.print("IP Address: ");
+  Serial.println(ip);
 }
 
-void loop() {
+void setup() 
+{
+  // put your setup code here, to run once:
+  Serial.begin(9600);
+  while(!Serial){};
+  Serial.println("Access Point Testing");
+
+  if(WiFi.status() == WL_NO_MODULE)
+  {
+    Serial.println("Communication Failed");
+  }
+
+  WiFi.config(ip);
+
+  Serial.println("Access Point is: " + String(ssid));
+  status = WiFi.beginAP(ssid, pw);
+  if (status != WL_AP_LISTENING) {
+    Serial.println("Creating access point failed");
+    // don't continue
+    while (true);
+  }
+
+  // wait 10 seconds for connection:
+  delay(10000);
+
+  // start the web server on port 80
+  server.begin();
+
+  printWiFiStatus();
+}
+
+void loop()
+{
   // put your main code here, to run repeatedly:
   WiFiClient client = server.available();
-  if(client)
+  if(client.connected())
   {
     Serial.println("Client Found");
   }
