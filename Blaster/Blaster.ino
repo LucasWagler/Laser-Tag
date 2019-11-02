@@ -1,6 +1,4 @@
-#include <SPI.h>
 #include <WiFiNINA.h>
-
 
 char ssid[] = "Blue1";          //  your network SSID (name)
 char pw[] = "BlueTeam1";        // your network password
@@ -11,6 +9,8 @@ int status = WL_IDLE_STATUS;
 char servername[]="google.com";  // remote server we will connect to
 
 WiFiClient client;
+
+IPAddress ip;
 
 void setup() 
 {
@@ -27,6 +27,8 @@ void setup()
      status = WiFi.begin(ssid, pw);
   }
   Serial.println("Connected to wifi");
+  ip = WiFi.localIP();
+  Serial.println(ip);
 }
 
 void loop() 
