@@ -23,7 +23,10 @@ void setup()
 {
   // put your setup code here, to run once:
   Serial.begin(9600);
+
+  // REMOVE after debug stages
   while(!Serial){};
+  
   Serial.println("Access Point Testing");
 
   if(WiFi.status() == WL_NO_MODULE)
@@ -65,11 +68,18 @@ void loop()
       Serial.println("Device disconnected from AP");
     }
   }
-//  // put your main code here, to run repeatedly:
-//  WiFiClient client = server.available();
+  // put your main code here, to run repeatedly:
+  WiFiClient client = server.available();
 //  Serial.println(client.status());
 //  if(client)
 //  {
-//    Serial.println("Client Found");
+//    if(client.connected())
+//    {
+//      Serial.println("Client Found");
+//      server.print('v');
+//    }
 //  }
+  client.stop();
+  server.print('h');
+  delay(20000);
 }
