@@ -1,7 +1,14 @@
 #include <WiFiNINA.h>
 
+//IR Emitter
 #define IRLED 0
-#define HITLED 0
+
+//RGB LED
+#define HitLedR A1 //Pin A1 on Arduino
+#define HitLedG A2 //Pin A2 on Arduino
+#define HitLedB A3 //Pin A3 on Arduino
+
+
 #define BOARDLED LED_BUILTIN
 #define HIT 'h'
 
@@ -19,11 +26,18 @@ IPAddress ip;
 
 void setup() 
 {
-  Serial.begin(9600);
+  
+  pinMode(HitLedR, OUTPUT);
+  pinMode(HitLedG, OUTPUT);
+  pinMode(HitLedB, OUTPUT);
   pinMode(BOARDLED, OUTPUT);
+  digitalWrite(HitLedR, LOW);
+  digitalWrite(HitLedG, LOW);
+  digitalWrite(HitLedB, LOW);
   digitalWrite(BOARDLED, LOW);
 
   //REMOVE AFTER DEBUGGING!!!
+  Serial.begin(9600);
   while(!Serial);
   
   Serial.println("Attempting to connect to: " + String(ssid));
@@ -55,9 +69,9 @@ void loop()
     if(c == HIT)
     {
       Serial.println("HIT");
-      for(int i = 0; i < 20; i++)
+      for(int i = 0; i < 10; i++)
       {
-        digitalWrite(BOARDLED, !digitalRead(BOARDLED));
+        digitalWrite(HitLedR, !digitalRead(HitLedR));
         delay(500);
       }
     }
