@@ -1,7 +1,7 @@
 //COMMENT OUT BEFORE DELIVERY
 #define DEBUG
 //DEFINE WHICH TEAM & # BEFORE PROGRAMMING ARDUINO
-#define BLUE1
+#define RED1
 
 #include <WiFiNINA.h>
 
@@ -106,7 +106,7 @@ void loop()
       }
     }
   }
-  #ifdef
+  #ifdef DEBUG
   Serial.println("Doing other tasks");
   #endif
 }

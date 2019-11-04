@@ -1,32 +1,35 @@
 //COMMENT OUT BEFORE DELIVERY
 #define DEBUG
 //DEFINE WHICH TEAM & # BEFORE PROGRAMMING ARDUINO
-#define BLUE1
+#define RED1
 
 #include <WiFiNINA.h>
 
 #ifdef BLUE1
 char ssid[] = "Blue1"; //Blue1 vest SSID
 char pw[] = "BlueTeam1"; //Blue1 vest PW
-IPAddress server(192,168,1,1); 
+IPAddress serverIP(192,168,1,1); 
+WiFiServer server(80);
 #endif
 #ifdef BLUE2
 char ssid[] = "Blue2"; //Blue2 vest SSID
 char pw[] = "BlueTeam2"; //Blue2 vest PW
-IPAddress server(192,168,2,1); 
+IPAddress serverIP(192,168,2,1); 
+WiFiServer server(80);
 #endif
 #ifdef RED1
 char ssid[] = "Red1"; //Red1 vest SSID
 char pw[] = "RedTeam1"; //Red1 vest PW
-IPAddress server(192,168,3,1); 
+IPAddress serverIP(192,168,3,1); 
+WiFiServer server(80);
 #endif
 #ifdef RED2
 char ssid[] = "Red2"; //Red2 vest SSID
 char pw[] = "RedTeam2"; //Red2 vest PW
-IPAddress server(192,168,4,1); 
+IPAddress serverIP(192,168,4,1); 
+WiFiServer server(80);
 #endif
 
-WiFiServer server(80);
 int status = WL_IDLE_STATUS;
 
 #ifdef DEBUG
@@ -53,7 +56,7 @@ void setup()
   }
   #endif
   
-  WiFi.config(ip);
+  WiFi.config(serverIP);
 
   #ifdef DEBUG
   Serial.println("Access Point is: " + String(ssid));
