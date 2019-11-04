@@ -1,53 +1,78 @@
+//COMMENT OUT BEFORE DELIVERY
+#define DEBUG
+//DEFINE WHICH TEAM & # BEFORE PROGRAMMING ARDUINO
+#define BLUE1
+
 #include <WiFiNINA.h>
 
-char ssid[] = "Blue1";
-char pw[] = "BlueTeam1";
+#ifdef BLUE1
+char ssid[] = "Blue1"; //Blue1 vest SSID
+char pw[] = "BlueTeam1"; //Blue1 vest PW
+IPAddress server(192,168,1,1); 
+#endif
+#ifdef BLUE2
+char ssid[] = "Blue2"; //Blue2 vest SSID
+char pw[] = "BlueTeam2"; //Blue2 vest PW
+IPAddress server(192,168,2,1); 
+#endif
+#ifdef RED1
+char ssid[] = "Red1"; //Red1 vest SSID
+char pw[] = "RedTeam1"; //Red1 vest PW
+IPAddress server(192,168,3,1); 
+#endif
+#ifdef RED2
+char ssid[] = "Red2"; //Red2 vest SSID
+char pw[] = "RedTeam2"; //Red2 vest PW
+IPAddress server(192,168,4,1); 
+#endif
 
-IPAddress ip(192,168,1,1);
 WiFiServer server(80);
 int status = WL_IDLE_STATUS;
 
+#ifdef DEBUG
 void printWiFiStatus()
 {
   // print the SSID of the network you're attached to:
-  Serial.print("SSID: ");
-  Serial.println(WiFi.SSID());
+  Serial.println("SSID: " + String(WiFi.SSID()));
 
   // print your WiFi shield's IP address:
   IPAddress ip = WiFi.localIP();
-  Serial.print("IP Address: ");
-  Serial.println(ip);
+  Serial.print("IP Address: " + String(ip));
 }
+#endif
 
 void setup() 
 {
-  // put your setup code here, to run once:
+  #ifdef DEBUG
   Serial.begin(9600);
-
-  // REMOVE after debug stages
   while(!Serial){};
-  
   Serial.println("Access Point Testing");
-
   if(WiFi.status() == WL_NO_MODULE)
   {
     Serial.println("Communication Failed");
   }
-
+  #endif
+  
   WiFi.config(ip);
 
+  #ifdef DEBUG
   Serial.println("Access Point is: " + String(ssid));
+  #endif
   status = WiFi.beginAP(ssid, pw);
   if (status != WL_AP_LISTENING) {
+    #ifdef DEBUG
     Serial.println("Creating access point failed");
+    #endif
     // don't continue
     while (true);
   }
 
   // start the web server on port 80
   server.begin();
-
+  
+  #ifdef DEBUG
   printWiFiStatus();
+  #endif
 }
 
 void loop()
