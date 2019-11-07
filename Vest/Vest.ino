@@ -3,7 +3,11 @@
 //DEFINE WHICH TEAM & # BEFORE PROGRAMMING ARDUINO
 #define RED1
 
+#include <Adafruit_NeoPixel.h>
 #include <WiFiNINA.h>
+
+#define LEDSTRIP 6
+#define NUMLED 150
 
 #ifdef BLUE1
 char ssid[] = "Blue1"; //Blue1 vest SSID
@@ -31,6 +35,7 @@ WiFiServer server(80);
 #endif
 
 int status = WL_IDLE_STATUS;
+Adafruit_NeoPixel pixels = Adafruit_NeoPixel(NUMPIXELS, PIN, NEO_GRB + NEO_KHZ800);
 
 #ifdef DEBUG
 void printWiFiStatus()
@@ -46,6 +51,9 @@ void printWiFiStatus()
 
 void setup() 
 {
+  //Initialize LED strip
+  pixels.begin();
+  
   #ifdef DEBUG
   Serial.begin(9600);
   while(!Serial){};
@@ -110,4 +118,11 @@ void loop()
 //  client.stop();
   server.print('h');
   delay(20000);
+
+  //LED Strip handler
+  for(int i=0;i<NUMPIXELS;i++){
+      pixels.setPixelColor(i, pixels.Color(100,0,0));
+      pixels.show();
+      //delay(delayval);
+  }
 }
