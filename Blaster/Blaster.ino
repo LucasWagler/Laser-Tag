@@ -5,6 +5,9 @@
 
 #include <WiFiNINA.h>
 
+//Trigger/Button Input
+#define trigger 2
+
 //IR Emitter
 #define IRLED 0
 
@@ -13,7 +16,10 @@
 #define HitLedG A2 //Pin A2 on Arduino
 #define HitLedB A3 //Pin A3 on Arduino
 
+//Board LED
 #define BOARDLED LED_BUILTIN
+
+//Commands
 #define HIT 'h'
 
 #ifdef BLUE1
@@ -37,12 +43,15 @@ char pw[] = "RedTeam2"; //Red2 vest PW
 IPAddress server(192,168,4,1); 
 #endif
 
+//Wifi Variables
 int port = 80;
-
 int status = WL_IDLE_STATUS;
-
 WiFiClient client;
 IPAddress ip;
+
+//Trigger Variables
+int buttonState = 0;
+int oldState = 0;
 
 void setup() 
 {
@@ -55,6 +64,9 @@ void setup()
   digitalWrite(HitLedG, LOW);
   digitalWrite(HitLedB, LOW);
   digitalWrite(BOARDLED, LOW);
+
+  //Setup Trigger input
+  pinMode(trigger, INPUT);
 
   #ifdef DEBUG
   Serial.begin(9600);
@@ -90,7 +102,14 @@ void setup()
 
 void loop() 
 {
-  //Timeout
+  //Trigger Press
+  buttonState = digitalRead(trigger);
+  if((buttonState != oldState) && (oldState != HIGH))
+  {
+    //IR Handler here
+  }
+
+  //Hit Handler
   if(client.available())
   {
     char c = client.read();
@@ -105,7 +124,7 @@ void loop()
         delay(500);
       }
     }
-  }
+  }  
   #ifdef DEBUG
   Serial.println("Doing other tasks");
   #endif
