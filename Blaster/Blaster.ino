@@ -46,6 +46,7 @@ IPAddress server(192,168,4,1);
 //Wifi Variables
 int port = 80;
 int status = WL_IDLE_STATUS;
+bool connection = false;
 WiFiClient client;
 IPAddress ip;
 
@@ -89,14 +90,18 @@ void setup()
   Serial.println("Connected to wifi");
   Serial.println(ip);
   #endif
-  
-  bool connection = client.connect(server,port);
-  
-  #ifdef DEBUG
-  if(connection)
+    
+  connection = client.connect(server,port);  
+  while(!connection)
   {
-    Serial.println("Connected to server");
+    #ifdef DEBUG
+    Serial.println("Couldn't get a connection to server");
+    #endif
+    delay(100);
+    connection = client.connect(server,port);  
   }
+  #ifdef DEBUG
+  Serial.println("Connected to server");
   #endif
 }
 
