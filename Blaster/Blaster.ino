@@ -6,7 +6,7 @@
 #include <WiFiNINA.h>
 
 //Trigger/Button Input
-#define trigger 2
+#define trigger A4
 
 //IR Emitter
 #define IRLED 0
@@ -51,11 +51,13 @@ WiFiClient client;
 IPAddress ip;
 
 //Trigger Variables
-int buttonState = 0;
-int oldState = 0;
+int buttonState;
+int oldState;
 
 void setup() 
 {
+  buttonState = HIGH;
+  oldState = HIGH;
   //Setup LED output and initialize
   pinMode(HitLedR, OUTPUT);
   pinMode(HitLedG, OUTPUT);
@@ -67,7 +69,7 @@ void setup()
   digitalWrite(BOARDLED, LOW);
 
   //Setup Trigger input
-  pinMode(trigger, INPUT);
+  pinMode(trigger, INPUT_PULLUP);
 
   #ifdef DEBUG
   Serial.begin(9600);
@@ -109,10 +111,15 @@ void loop()
 {
   //Trigger Press
   buttonState = digitalRead(trigger);
-  if((buttonState != oldState) && (oldState != HIGH))
+  //Serial.println(buttonState);
+  if((buttonState != oldState) && (oldState != LOW))
   {
     //IR Handler here
-  }
+    #ifdef DEBUG
+    Serial.println("Button Pressed");
+    #endif
+  }  
+  oldState = buttonState;
 
   //Hit Handler
   if(client.available())
@@ -123,7 +130,7 @@ void loop()
       #ifdef DEBUG
       Serial.println("HIT");
       #endif
-      for(int i = 0; i < 10; i++)
+      for(int i = 0; i < 20; i++)
       {
         digitalWrite(HitLedR, !digitalRead(HitLedR));
         delay(500);
@@ -131,6 +138,6 @@ void loop()
     }
   }  
   #ifdef DEBUG
-  Serial.println("Doing other tasks");
+  //Serial.println("Doing other tasks");
   #endif
 }

@@ -35,7 +35,7 @@ WiFiServer server(80);
 #endif
 
 int status = WL_IDLE_STATUS;
-Adafruit_NeoPixel pixels = Adafruit_NeoPixel(NUMPIXELS, PIN, NEO_GRB + NEO_KHZ800);
+Adafruit_NeoPixel pixels = Adafruit_NeoPixel(NUMLED, LEDSTRIP, NEO_GRB + NEO_KHZ800);
 
 #ifdef DEBUG
 void printWiFiStatus()
@@ -120,7 +120,7 @@ void loop()
   delay(20000);
 
   //LED Strip handler
-  for(int i=0;i<NUMPIXELS;i++){
+  for(int i=0;i<NUMLED;i++){
       pixels.setPixelColor(i, pixels.Color(100,0,0));
       pixels.show();
       //delay(delayval);
