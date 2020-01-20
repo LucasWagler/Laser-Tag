@@ -26,21 +26,70 @@
 char ssid[] = "Blue1"; //Blue1 vest SSID
 char pw[] = "BlueTeam1"; //Blue1 vest PW
 IPAddress server(192,168,1,1); 
+void Command(int PIN)
+{  
+  //Command : 0010_0000
+  for(int i=0;i<=1;i++){Zero(PIN);}
+  ONE(PIN);   
+  for(int i=3;i<=7;i++){Zero(PIN);}  
+
+  for(int i=0;i<=1;i++){ONE(PIN);}
+  Zero(PIN);   
+  for(int i=3;i<=7;i++){ONE(PIN);}  
+}
 #endif
+
 #ifdef BLUE2
 char ssid[] = "Blue2"; //Blue2 vest SSID
 char pw[] = "BlueTeam2"; //Blue2 vest PW
 IPAddress server(192,168,2,1); 
+void Command(int PIN)
+{
+  //Command : 0100_0000
+  Zero(PIN);
+  ONE(PIN);
+  for(int i=3;i<=7;i++){Zero(PIN);}
+
+  ONE(PIN);
+  Zero(PIN);
+  for(int i=3;i<=7;i++){ONE(PIN);}  
+}
 #endif
+
 #ifdef RED1
 char ssid[] = "Red1"; //Red1 vest SSID
 char pw[] = "RedTeam1"; //Red1 vest PW
 IPAddress server(192,168,3,1); 
+void Command(int PIN)
+{
+  //Command : 1010_0000
+  ONE(PIN);
+  Zero(PIN);
+  ONE(PIN);   
+  for(int i=3;i<=7;i++){Zero(PIN);}  
+
+  Zero(PIN);
+  ONE(PIN);
+  Zero(PIN);   
+  for(int i=3;i<=7;i++){ONE(PIN);}  
+}
 #endif
+
 #ifdef RED2
 char ssid[] = "Red2"; //Red2 vest SSID
 char pw[] = "RedTeam2"; //Red2 vest PW
-IPAddress server(192,168,4,1); 
+IPAddress server(192,168,4,1);
+void Command(int PIN)
+{
+  //Command : 1100_0000
+  ONE(PIN);
+  ONE(PIN);
+  for(int i=3;i<=7;i++){Zero(PIN);}
+
+  Zero(PIN);
+  Zero(PIN);
+  for(int i=3;i<=7;i++){ONE(PIN);}  
+} 
 #endif
 
 //Wifi Variables
@@ -53,6 +102,51 @@ IPAddress ip;
 //Trigger Variables
 int buttonState;
 int oldState;
+
+//Command : 1100_0000
+void ONE(int PIN) //Logical '1' – a 562.5µs pulse burst followed by a 1.6875ms space, with a total transmit time of 2.25ms
+{ 
+  tone(PIN,38000);
+  delayMicroseconds(563);
+  noTone(PIN);
+  delayMicroseconds(1687);    
+}
+
+void Zero(int PIN) //Logical '0' – a 562.5µs pulse burst followed by a 562.5µs space, with a total transmit time of 1.125ms
+{ 
+  tone(PIN,38000);
+  delayMicroseconds(563);
+  noTone(PIN);
+  delayMicroseconds(563);  
+}
+
+void Start(int PIN)
+{  
+  tone(PIN,38000);
+  delay(9);
+  noTone(PIN);
+  delayMicroseconds(4500);  
+}
+
+void Address(int PIN)
+{
+  for(int i=0;i<=7;i++){Zero(PIN);} //  adresss  = 0000_0000
+  for(int i=0;i<=7;i++){ONE(PIN);}  // !address = 1111_1111
+}
+
+void dummybit(int PIN)
+{  
+  Zero(PIN);  
+}
+
+void ShootSignal(int PIN)
+{
+   Start(PIN);
+   dummybit(PIN);
+   Address(PIN);
+   Command (PIN);
+   dummybit(PIN);
+}
 
 void setup() 
 {
@@ -118,6 +212,7 @@ void loop()
     #ifdef DEBUG
     Serial.println("Button Pressed");
     #endif
+    ShootSignal(IRLED);
   }  
   oldState = buttonState;
 
