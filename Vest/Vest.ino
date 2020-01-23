@@ -1,7 +1,7 @@
 //COMMENT OUT BEFORE DELIVERY
 #define DEBUG
 //DEFINE WHICH TEAM & # BEFORE PROGRAMMING ARDUINO
-#define RED1
+#define BLUE1
 
 #include <Adafruit_NeoPixel.h>
 #include <WiFiNINA.h>
@@ -59,18 +59,18 @@ void read_data(int PIN, int data[]){
   int i;
   int low;
   
-  start = pulseIn(PIN,HIGH,100000);
+  start = pulseIn(PIN,LOW,100000);
 
   if(start >= 8750 && start <= 9250){
     
    
     
-    low = pulseIn(PIN,LOW,10000);
+    low = pulseIn(PIN,HIGH,10000);
     i = 0;
     
     while(low != 0){
     
-      low = pulseIn(PIN,LOW,5000);
+      low = pulseIn(PIN,HIGH,5000);
       if(low >= 500 && low <= 600){data[i] = 0;}
       else {
         if(low >= 1500 && low <= 2100){data[i] = 1;}
@@ -95,8 +95,8 @@ void Decoder(int data[]){
               hit = 1;
         }
        }
-  else if(data[16] == 0 && data[17] == 1 && data[18] == 0 && data[19] == 0 && data[20] == 0 && data[21] == 0 && data[22] == 0 && data[23] == 0){
-       if(data[24] == 1 && data[25] == 0 && data[26] == 1 && data[27] == 1 && data[28] == 1 && data[29] == 1 && data[30] == 1 && data[31] == 1){
+  else if(data[16] == 0 && data[17] == 1 && data[18] == 0 && data[19] == 1 && data[20] == 0 && data[21] == 0 && data[22] == 0 && data[23] == 0){
+       if(data[24] == 1 && data[25] == 0 && data[26] == 1 && data[27] == 0 && data[28] == 1 && data[29] == 1 && data[30] == 1 && data[31] == 1){
               team = 2;
               player = 2;
               hit = 2;
@@ -109,8 +109,8 @@ void Decoder(int data[]){
               hit = 3;
         }
        }
-   else if(data[16] == 1 && data[17] == 1 && data[18] == 0 && data[19] == 0 && data[20] == 0 && data[21] == 0 && data[22] == 0 && data[23] == 0){
-        if(data[24] == 0 && data[25] == 0 && data[26] == 1 && data[27] == 1 && data[28] == 1 && data[29] == 1 && data[30] == 1 && data[31] == 1){
+   else if(data[16] == 1 && data[17] == 1 && data[18] == 0 && data[19] == 1 && data[20] == 0 && data[21] == 0 && data[22] == 0 && data[23] == 0){
+        if(data[24] == 0 && data[25] == 0 && data[26] == 1 && data[27] == 0 && data[28] == 1 && data[29] == 1 && data[30] == 1 && data[31] == 1){
               team = 4;
               player = 4;
               hit = 4;
@@ -196,19 +196,24 @@ void loop()
 //    }
 //  }
 //  client.stop();
-    server.print('h');
-    delay(20000);
+//    server.print('h');
+//    delay(20000);
 
     //LED Strip handler
-    for(int i=0;i<NUMLED;i++){
-        pixels.setPixelColor(i, pixels.Color(100,0,0));
-        pixels.show();
-        //delay(delayval);
-    }
+//    for(int i=0;i<NUMLED;i++){
+//        pixels.setPixelColor(i, pixels.Color(100,0,0));
+//        pixels.show();
+//        //delay(delayval);
+//    }
     IR_Check(6); //  Parameter  = PIN Number to check in the form of an integer.
-    Serial.println(team);
-    Serial.println(player);
-    Serial.println(hit);
+    if(hit)
+    {
+      server.print('h');
+      Serial.println(team);
+      Serial.println(player);
+      Serial.println(hit);
+//      delay(10000);
+    }
     team = 0;
     player = 0;
     hit = 0;
