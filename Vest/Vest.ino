@@ -1,5 +1,5 @@
 //COMMENT OUT BEFORE DELIVERY
-#define DEBUG
+//#define DEBUG
 //DEFINE WHICH TEAM & # BEFORE PROGRAMMING ARDUINO
 #define BLUE1
 
@@ -8,6 +8,7 @@
 
 #define LEDSTRIP 7
 #define NUMLED 150
+#define BOARDLED LED_BUILTIN
 
 #ifdef BLUE1
 char ssid[] = "Blue1"; //Blue1 vest SSID
@@ -15,18 +16,21 @@ char pw[] = "BlueTeam1"; //Blue1 vest PW
 IPAddress serverIP(192,168,1,1); 
 WiFiServer server(80);
 #endif
+
 #ifdef BLUE2
 char ssid[] = "Blue2"; //Blue2 vest SSID
 char pw[] = "BlueTeam2"; //Blue2 vest PW
 IPAddress serverIP(192,168,2,1); 
 WiFiServer server(80);
 #endif
+
 #ifdef RED1
 char ssid[] = "Red1"; //Red1 vest SSID
 char pw[] = "RedTeam1"; //Red1 vest PW
 IPAddress serverIP(192,168,3,1); 
 WiFiServer server(80);
 #endif
+
 #ifdef RED2
 char ssid[] = "Red2"; //Red2 vest SSID
 char pw[] = "RedTeam2"; //Red2 vest PW
@@ -45,7 +49,7 @@ void printWiFiStatus()
 
   // print your WiFi shield's IP address:
   IPAddress ip = WiFi.localIP();
-  Serial.print("IP Address: " + String(ip));
+  Serial.println("IP Address: " + String(ip));
 }
 #endif
 
@@ -53,41 +57,36 @@ int team = 0;
 int player = 0;
 int hit = 0;
 
-void read_data(int PIN, int data[]){
-
+void read_data(int PIN, int data[])
+{
   int start;
   int i;
   int low;
   
   start = pulseIn(PIN,LOW,100000);
 
-  if(start >= 8750 && start <= 9250){
-    
-   
-    
+  if(start >= 8750 && start <= 9250)
+  {
     low = pulseIn(PIN,HIGH,10000);
     i = 0;
     
-    while(low != 0){
-    
+    while(low != 0)
+    {    
       low = pulseIn(PIN,HIGH,5000);
       if(low >= 500 && low <= 600){data[i] = 0;}
-      else {
+      else 
+      {
         if(low >= 1500 && low <= 2100){data[i] = 1;}
             else{data[i] = 0;}
       }
     
-      i++;
- 
+      i++; 
+    }               
   }
-               
-  }
-
-
 }
 
-void Decoder(int data[]){
-  
+void Decoder(int data[])
+{  
   if(data[16] == 0 && data[17] == 0 && data[18] == 1 && data[19] == 0 && data[20] == 0 && data[21] == 0 && data[22] == 0 && data[23] == 0){
         if(data[24] == 1 && data[25] == 1 && data[26] == 0 && data[27] == 1 && data[28] == 1 && data[29] == 1 && data[30] == 1 && data[31] == 1){
               team = 1;
@@ -115,24 +114,25 @@ void Decoder(int data[]){
               player = 4;
               hit = 4;
         }
-       }
-  
-  }
+       }  
+}
 
-void IR_Check(int PIN){
-
+void IR_Check(int PIN)
+{
   int data[32];
   
   read_data(PIN,data);
   
   Decoder(data);
-
-  }
+}
 
 void setup() 
 {
   //Initialize LED strip
   pixels.begin();
+
+  pinMode(BOARDLED, OUTPUT);
+  digitalWrite(BOARDLED, LOW);
   
   #ifdef DEBUG
   Serial.begin(9600);
@@ -175,15 +175,19 @@ void loop()
 
     if (status == WL_AP_CONNECTED) 
     {
-      // a device has connected to the AP
+      #ifdef DEBUG
       Serial.println("Device connected to AP");
+      #endif
     } 
     else 
     {
       // a device has disconnected from the AP, and we are back in listening mode
+      #ifdef DEBUG
       Serial.println("Device disconnected from AP");
+      #endif
     }
   }
+  //}
   // put your main code here, to run repeatedly:
 //  WiFiClient client = server.available();
 //  Serial.println(client.status());
