@@ -131,11 +131,47 @@ bool connection = false;
 WiFiClient client;
 IPAddress ip;
 
+void configwifi()
+{
+  #ifdef DEBUG
+  Serial.println("Attempting to connect to: " + String(ssid));
+  #endif
+
+  status = WiFi.begin(ssid, pw);
+  while(status != WL_CONNECTED)
+  {
+    #ifdef DEBUG
+    Serial.println("Couldn't get a wifi connection");
+    #endif
+    delay(500);
+    status = WiFi.begin(ssid, pw);
+  }
+  digitalWrite(BOARDLED, HIGH);
+  
+  #ifdef DEBUG
+  ip = WiFi.localIP();
+  Serial.println("Connected to wifi");
+  Serial.println(ip);
+  #endif
+
+  connection = client.connect(server, port);
+  while(!connection)
+  {
+    #ifdef DEBUG
+    Serial.println("Couldn't get a connection to server");
+    #endif
+    delay(100);
+    connection = client.connect(server, port);
+  }
+  #ifdef DEBUG
+  Serial.println("Connected to server");
+  #endif
+}
+
 //Trigger Variables
 int buttonState;
 int oldState;
 
-//Command : 1100_0000
 void ONE(int PIN) //Logical '1' – a 562.5µs pulse burst followed by a 1.6875ms space, with a total transmit time of 2.25ms
 {
   tone(PIN,38000);
@@ -163,7 +199,7 @@ void Start(int PIN)
 void Address(int PIN)
 {
   for (int i = 0; i <= 7; i++) {
-    Zero(PIN); //  adresss  = 0000_0000
+    Zero(PIN); //  address  = 0000_0000
   }
   for (int i = 0; i <= 7; i++) {
     ONE(PIN); // !address = 1111_1111
@@ -201,53 +237,31 @@ void setup()
   //Setup Trigger input
   pinMode(trigger, INPUT_PULLUP);
 
-#ifdef DEBUG
+  #ifdef DEBUG
   Serial.begin(9600);
   while (!Serial);
-  Serial.println("Attempting to connect to: " + String(ssid));
-#endif
+  #endif
 
-  status = WiFi.begin(ssid, pw);
-  while ( status != WL_CONNECTED)
-  {
-#ifdef DEBUG
-    Serial.println("Couldn't get a wifi connection");
-#endif
-    delay(500);
-    status = WiFi.begin(ssid, pw);
-  }
-  digitalWrite(BOARDLED, HIGH);
-  ip = WiFi.localIP();
-#ifdef DEBUG
-  Serial.println("Connected to wifi");
-  Serial.println(ip);
-#endif
-
-  connection = client.connect(server, port);
-  while (!connection)
-  {
-#ifdef DEBUG
-    Serial.println("Couldn't get a connection to server");
-#endif
-    delay(100);
-    connection = client.connect(server, port);
-  }
-#ifdef DEBUG
-  Serial.println("Connected to server");
-#endif
+  configwifi();
 }
 
 void loop()
-{
+{ 
+  if(WiFi.status() != WL_CONNECTED)
+  {
+    digitalWrite(BOARDLED, LOW);
+    configwifi();
+  }
+      
   //Trigger Press
   buttonState = digitalRead(trigger);
   //Serial.println(buttonState);
   if ((buttonState != oldState) && (oldState != LOW))
   {
     //IR Handler here
-#ifdef DEBUG
+    #ifdef DEBUG
     Serial.println("Button Pressed");
-#endif
+    #endif
     ShootSignal(IRLED);
   }
   oldState = buttonState;
@@ -258,9 +272,9 @@ void loop()
     char c = client.read();
     if (c == HIT)
     {
-#ifdef DEBUG
+      #ifdef DEBUG
       Serial.println("HIT");
-#endif
+      #endif
       for (int i = 0; i < 20; i++)
       {
         digitalWrite(HitLedR, !digitalRead(HitLedR));
@@ -268,7 +282,7 @@ void loop()
       }
     }
   }
-#ifdef DEBUG
+  #ifdef DEBUG
   //Serial.println("Doing other tasks");
-#endif
+  #endif
 }
