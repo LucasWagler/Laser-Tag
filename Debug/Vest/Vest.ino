@@ -132,7 +132,13 @@ void setup()
   pixels.begin();
 
   pinMode(BOARDLED, OUTPUT);
+  pinMode(8, OUTPUT);
+  pinMode(9, OUTPUT);
+  pinMode(10, OUTPUT);
   digitalWrite(BOARDLED, LOW);
+  digitalWrite(8, HIGH);
+  digitalWrite(9, HIGH);
+  digitalWrite(10, HIGH);
   
   #ifdef DEBUG
   Serial.begin(9600);
@@ -165,9 +171,7 @@ void setup()
   printWiFiStatus();
   #endif
 
-  digitalWrite(8, HIGH);
-  digitalWrite(9, HIGH);
-  digitalWrite(10, HIGH);
+  
 }
 
 void loop()
@@ -215,9 +219,9 @@ void loop()
 //    }
 //
     IR_Check(6); //  Parameter  = PIN Number to check in the form of an integer.
-//    IR_Check(5);
-//    IR_Check(4);
-//    IR_Check(3);
+    IR_Check(5);
+    IR_Check(4);
+    IR_Check(3);
     if(hit){
       server.print('h');
       for (int t = 0; t < 10; t++)

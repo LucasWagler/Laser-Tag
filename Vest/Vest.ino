@@ -1,7 +1,7 @@
 //COMMENT OUT BEFORE DELIVERY
 //#define DEBUG
 //DEFINE WHICH TEAM & # BEFORE PROGRAMMING ARDUINO
-#define BLUE1
+#define RED1
 
 #include <Adafruit_NeoPixel.h>
 #include <WiFiNINA.h>
