@@ -7,7 +7,7 @@
 #include <WiFiNINA.h>
 
 #define LEDSTRIP 7
-#define NUMLED 150
+#define NUMLED 30
 #define BOARDLED LED_BUILTIN
 
 #ifdef BLUE1
@@ -133,6 +133,18 @@ void setup()
 
   pinMode(BOARDLED, OUTPUT);
   digitalWrite(BOARDLED, LOW);
+
+//  pinMode(6, OUTPUT);
+//  digitalWrite(6, HIGH);
+
+  pinMode(8, OUTPUT);
+  digitalWrite(8, HIGH);
+
+  pinMode(9, OUTPUT);
+  digitalWrite(9, HIGH);
+
+  pinMode(10, OUTPUT);
+  digitalWrite(10, HIGH);
   
   #ifdef DEBUG
   Serial.begin(9600);
@@ -210,14 +222,50 @@ void loop()
 //        //delay(delayval);
 //    }
     IR_Check(6); //  Parameter  = PIN Number to check in the form of an integer.
-    if(hit)
-    {
+    if(hit){
+      pixels.setPixelColor(0, pixels.Color(255,0,0));
+      pixels.show();
+      delay(500);
+      pixels.clear();
+      pixels.show();
       server.print('h');
-      Serial.println(team);
-      Serial.println(player);
-      Serial.println(hit);
-//      delay(10000);
+      hit=0;
     }
+    
+    IR_Check(5);
+    if(hit){
+      pixels.setPixelColor(1, pixels.Color(255,0,0));
+      pixels.show();
+      delay(500);
+      pixels.clear();
+      pixels.show();
+      server.print('h');
+      hit=0;
+    }
+    
+    IR_Check(4);
+    if(hit){
+      pixels.setPixelColor(2, pixels.Color(255,0,0));
+      pixels.show();
+      delay(500);
+      pixels.clear();
+      pixels.show();
+      server.print('h');
+      hit=0;
+    }
+    
+    IR_Check(3);
+    if(hit){
+      pixels.setPixelColor(3, pixels.Color(255,0,0));
+      pixels.show();
+      delay(500);
+      pixels.clear();
+      pixels.show();
+      server.print('h');
+      hit=0;
+    }
+
+    
     team = 0;
     player = 0;
     hit = 0;
